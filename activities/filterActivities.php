@@ -1,33 +1,40 @@
 <?php
-// À TERMINER ****************************************** TODO: retirer cette ligne apres finalisation *********** ///
 
 require __DIR__ . "/../database.php";
 
 $request = $_SERVER['REQUEST_URI'];
-$coach = isset($_GET["coach"]) ? $_GET["coach"] : null;
-$level = isset($_GET["level"]) ? $_GET["level"] : null;
-$location = isset($_GET["location"]) ? $_GET["location"] : null;
+$coach = (isset($_GET["coach"]) && strlen($_GET["coach"])) ? $_GET["coach"] : null;
+$level = (isset($_GET["level"]) && isset($_GET["level"])) ? $_GET["level"] : null;
+$location = (isset($_GET["location"]) && isset($_GET["location"])) ? $_GET["location"] : null;
 
-$req = $pdo->prepare(
+$demande = 
     "
-    SELECT a.*
+    SELECT a.*, c.name as coach_name, loc.name as location_name
     FROM activities a
     JOIN coaches c ON a.coach_id = c.id
-    JOIN levels l ON a.level_id = l.id
     JOIN locations loc ON a.location_id = loc.id
-    WHERE (c.name = :coach OR :coach IS NULL)
-    AND (l.name = :level OR :level IS NULL)
-    AND (loc.name = :location OR :location IS NULL);
-    "
-);
+    WHERE 1=1
+    "; // Le WHERE 1=1 permet de ne pas avoir à gérer le premier AND dans la requête
 
-$req->execute([
-    "coach" => $coach,
-    "level" => $level,
-    "location" => $location,
-]);
+// CONSTRUSTION DE LA REQUETE SQL ET DES PARAMS À ENVOYER -----------------------------------
+$params = [];
+if($coach) {
+    $demande .= " AND c.name = :coach ";
+    $params["coach"] = $coach;
+}
+if ($level) {
+    $demande .= " AND level_id = :level";
+    $params["level"] = $level;
+}
+if ($location) {
+    $demande .= " AND loc.name = :location";
+    $params["location"] = $location;
+}
 
+$req = $pdo->prepare($demande.";");
+$req->execute($params);
 $rep = $req->fetchAll(PDO::FETCH_ASSOC);
+
 if($rep) {
     echo json_encode($rep, JSON_PRETTY_PRINT);
 } else {
