@@ -5,10 +5,12 @@ $req = $pdo->prepare("SELECT * FROM activities ORDER BY RAND() LIMIT 4");
 $req->execute();
 
 $rep = $req->fetchAll(PDO::FETCH_ASSOC);
-if($req) {
+if($rep) {
     echo json_encode($rep, JSON_PRETTY_PRINT);
 } else {
-    echo '{ "error": "Impossible de récuperer les activitées." }';
+    echo json_encode([
+        "error_msg" => "Impossible de récuperer les activitées."
+    ]);
 }
 
 ?>
