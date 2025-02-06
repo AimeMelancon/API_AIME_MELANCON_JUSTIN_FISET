@@ -4,9 +4,9 @@
 require __DIR__ . "/../database.php";
 
 $request = $_SERVER['REQUEST_URI'];
-$coach = isset($_GET['coach']) ? $_GET['coach'] : null;
-$level = isset($_GET['level']) ? $_GET['level'] : null;
-$location = isset($_GET['location']) ? $_GET['location'] : null;
+$coach = isset($_GET["coach"]) ? $_GET["coach"] : null;
+$level = isset($_GET["level"]) ? $_GET["level"] : null;
+$location = isset($_GET["location"]) ? $_GET["location"] : null;
 
 $req = $pdo->prepare(
     "
@@ -24,7 +24,7 @@ $req = $pdo->prepare(
 $req->execute([
     "coach" => $coach,
     "level" => $level,
-    "location" => $location
+    "location" => $location,
 ]);
 
 $rep = $req->fetchAll(PDO::FETCH_ASSOC);
