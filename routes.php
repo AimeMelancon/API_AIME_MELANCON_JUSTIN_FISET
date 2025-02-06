@@ -1,18 +1,25 @@
 <?php 
-$request = $_SERVER['REQUEST_URI'];
 
-if($_SERVER["REQUEST_METHOD"] == "GET") {
-    switch ($request) {
-        case "/api/activities/random" :
-            require __DIR__ . "/activities/randomActivities.php";
-            break;
-        case "/api/activities/filter" :
-            require __DIR__ . "/activities/filteredActivity.php";
-            break;
-        default:
-            http_response_code(404);
-            require __DIR__ . '/404.php';
-            break;
+// Spécification de chacunes des routes pour les différents fichiers php en fonction de la méthode HTTP (GET, POST, PUT, DELETE)
+// chaque clé est un regex et chaque valeur est le chemin du fichier php correspondant qui sera chargé
+function get_routes($method) {
+    if($method == "GET") {
+        return [
+            "/api/activities/random" => "/activities/randomActivities.php",
+            "/api/activities/filter" => "/activities/filterActivities.php",
+            "/api/activities/([0-9]+)" => "/activities/activity.php",
+            "/404" => "/404.php",
+        ];
+    } else if($method == "POST") {
+        return [
+            "/api/activities" => "/activities/addActivity.php",
+            "/404" => "/404.php",
+        ];
+    } else if($method == "PUT") {
+        return [
+            "/api/activities/([0-9]+)" => "/activities/updateActivity.php",
+            "/404" => "/404.php",
+        ];
     }
 }
 
