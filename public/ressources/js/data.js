@@ -288,7 +288,7 @@ function createActivity(activity, container) {
   container.append(article);
 
   article.addEventListener("click", () => {
-    window.location.href = "/formulaire.html?id=" + activity.id;
+    window.location.href = "/formulaireActivite?id=" + activity.id;
   });
 }
 
@@ -296,35 +296,35 @@ function initButtons() {
   const logo = document.getElementById("navbar-logo");
   if(logo) {
     logo.addEventListener("click", () => {
-      window.location.href = "/index.html";
+      window.location.href = "/index";
     });
   }
 
   const home = document.getElementById("welcome");
   if(home) {
     home.addEventListener("click", () => {
-      window.location.href = "/index.html";
+      window.location.href = "/index";
     });
   }
 
   const listOfActivity = document.getElementById("listOfActivity");
   if(listOfActivity) {
     listOfActivity.addEventListener("click", () => {
-      window.location.href = "/listeActivite.html";
+      window.location.href = "/listeActivite";
     });
   }
 
   const addActivity = document.getElementById("ajouter-activite");
   if(addActivity) {
     addActivity.addEventListener("click", () => {
-      window.location.href = "/formulaire.html";
+      window.location.href = "/formulaireActivite";
     });
   }
 
   const allActivity = document.getElementById("allActivities");
   if(allActivity){
     allActivity.addEventListener("click", () => {
-      window.location.href = "/listeActivite.html";
+      window.location.href = "/listeActivite";
     });
   }
 
@@ -351,7 +351,7 @@ function initButtons() {
   const enregistrerForm = document.getElementById("enregistrer");
   if(enregistrerForm) {
     enregistrerForm.addEventListener("click", () => {
-      window.location.href = "/listeActivite.html";
+      window.location.href = "/listeActivite";
     });
   }
 }

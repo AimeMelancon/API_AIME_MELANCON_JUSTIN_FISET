@@ -5,11 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>Liste d'activité | Centre Sportif</title>
-    <link rel="stylesheet" href="./ressources/css/normalize.css">
-    <link rel="stylesheet" href="./ressources/css/main.css">
-    <link rel="stylesheet" href="./ressources/css/listeActivite.css">
+    <link rel="stylesheet" href="/public/ressources/css/normalize.css">
+    <link rel="stylesheet" href="/public/ressources/css/main.css">
+    <link rel="stylesheet" href="/public/ressources/css/listeActivite.css">
 
-    <script type="module" src="./ressources/js/data.js" defer></script>
+    <script type="module" src="/public/ressources/js/data.js" defer></script>
 </head>
 
 <body>
