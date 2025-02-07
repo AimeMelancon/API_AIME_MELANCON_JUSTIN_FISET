@@ -2,7 +2,6 @@
 
 require __DIR__ . "/../database.php";
 
-$request = $_SERVER['REQUEST_URI'];
 $coach = (isset($_GET["coach"]) && strlen($_GET["coach"])) ? $_GET["coach"] : null;
 $level = (isset($_GET["level"]) && isset($_GET["level"])) ? $_GET["level"] : null;
 $location = (isset($_GET["location"]) && isset($_GET["location"])) ? $_GET["location"] : null;

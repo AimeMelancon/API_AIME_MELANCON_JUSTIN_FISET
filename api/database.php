@@ -1,4 +1,5 @@
 <?php
+
 $host = 'db';
 $db = 'mydatabase'; 
 $user = 'user';
@@ -16,4 +17,5 @@ try {
 } catch (\PDOException $e) {
     die("Erreur de connexion à la base de données: " . $e->getMessage());
 }
+
 ?>
