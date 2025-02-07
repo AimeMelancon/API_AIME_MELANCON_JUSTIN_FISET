@@ -7,7 +7,8 @@ if($data) {
     print_r($data); // TODO: REMOVE
 
     $req = $pdo->prepare("INSERT INTO activities (name, description, level_id, coach_id, location_id) 
-                         VALUES (:name, :description, :level_id, :coach_id, :location_id)");
+                                 VALUES (:name, :description, :level_id, :coach_id, :location_id)");
+                                 
     $req->execute([
         "name" => $data["name"],
         "description" => $data["description"],

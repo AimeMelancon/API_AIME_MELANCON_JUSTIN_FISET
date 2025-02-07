@@ -8,6 +8,8 @@ function get_routes($method) {
             "/api/activities/random/?" => "/api/activities/randomActivities.php",
             "/api/activities/filter/?" => "/api/activities/filterActivities.php",
             "/api/activities/([0-9]+/?)" => "/api/activities/activity.php",
+            "/api/coaches/?" => "/api/coaches/coaches.php",
+            "/api/locations/?" => "/api/locations/locations.php",
             "/404" => "/404.php",
         ];
     } else if($method == "POST") { 
