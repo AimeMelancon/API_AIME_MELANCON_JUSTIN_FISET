@@ -1,11 +1,7 @@
 <?php
 require __DIR__ . "/../database.php";
 
-$json = (isset($_POST["data"]) && strlen($_POST("data")) > 0) ? $_POST("data") : null;
-$data = null;
-if($json) {
-    $data = json_decode($json, true);
-}
+$data = json_decode(file_get_contents("php://input"), true);
 
 if($data) {
     print_r($data); // TODO: REMOVE

@@ -5,9 +5,9 @@
 function get_routes($method) {
     if($method == "GET") {
         return [
-            "/api/activities/random" => "/api/activities/randomActivities.php",
-            "/api/activities/filter" => "/api/activities/filterActivities.php",
-            "/api/activities/([0-9]+)" => "/api/activities/activity.php",
+            "/api/activities/random/?" => "/api/activities/randomActivities.php",
+            "/api/activities/filter/?" => "/api/activities/filterActivities.php",
+            "/api/activities/([0-9]+/?)" => "/api/activities/activity.php",
             "/404" => "/404.php",
         ];
     } else if($method == "POST") { 
