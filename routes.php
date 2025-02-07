@@ -10,9 +10,9 @@ function get_routes($method) {
             "/api/activities/([0-9]+)" => "/api/activities/activity.php",
             "/404" => "/404.php",
         ];
-    } else if($method == "POST") {
+    } else if($method == "POST") { 
         return [
-            "/api/activities" => "/api/activities/addActivity.php",
+            "/api/activities/?" => "/api/activities/addActivity.php",
             "/404" => "/404.php",
         ];
     } else if($method == "PUT") {

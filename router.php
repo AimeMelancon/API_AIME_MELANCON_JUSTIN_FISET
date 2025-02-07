@@ -1,15 +1,17 @@
 <?php
 require __DIR__ . "/routes.php"; // Fichier qui contient get_routes();
 
-$method = $_SERVER['REQUEST_METHOD']; // GET, POST, PUT, DELETE
+$method = "POST"; // TODO: change to $_SERVER['REQUEST_METHOD']
 $routes = get_routes($method);
-
+echo $method; // TODO: remove
 $request = $_SERVER['REQUEST_URI'];
 // On récupère uniquement le chemin Ex http://localhost:8000/api/activities/random => /api/activities/random
 $path = parse_url($request, PHP_URL_PATH);
+echo $path . " => "; // TODO: remove
 
 $found = false; // On n'a pas encore trouvé de route correspondante initialement
 foreach($routes as $route => $file) {
+    echo $route." -- "; // TODO: remove
     if(preg_match("#^".$route."$#", $path)) { // On vérifie chaque chemin avec un regex
         if(file_exists(__DIR__ . $file)) {
             $found = true;
