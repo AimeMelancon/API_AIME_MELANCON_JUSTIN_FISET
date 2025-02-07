@@ -5,6 +5,10 @@
 function get_routes($method) {
     if($method == "GET") {
         return [
+            "/index/?" => "/public/index.php",
+            "/formulaireActivite/?" => "/public/formulaireActivite.php",
+            "/listeActivite/?" => "/public/listeActivite.php",
+
             "/api/activities/random/?" => "/api/activities/randomActivities.php",
             "/api/activities/filter/?" => "/api/activities/filterActivities.php",
             "/api/activities/([0-9]+/?)" => "/api/activities/activity.php",
