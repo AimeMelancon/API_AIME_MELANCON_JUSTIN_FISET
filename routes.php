@@ -12,6 +12,7 @@ $routes = [
         "/api/activities/([0-9]+/?)" => "/api/activities/activity.php",
         "/api/coaches/?" => "/api/coaches/coaches.php",
         "/api/locations/?" => "/api/locations/locations.php",
+        "/api/levels/?" => "/api/levels/levels.php",
         "/404" => "/404.php",
     ],
     "POST" => [

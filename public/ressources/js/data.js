@@ -155,27 +155,47 @@ function createPopularActivity(activity) {
 function populateFilters() {
     const form = document.getElementById("form-filtres");
 
-    createFilter("level", form, "Niveau : ");
-    createFilter("location", form, "Lieu : ");
-    createFilter("coach", form, "Entraineur : ");
-    createFilter("schedule_day", form, "Jour : ");
+    createFilter("/api/levels/", "name", form, "Niveau : ", "levelFilters");
+    createFilter("/api/locations/", "name", form, "Lieu : ", "locationFilters");
+    createFilter(
+        "/api/coaches/",
+        "name",
+        form,
+        "Entraineur : ",
+        "coachFilters"
+    );
 }
 
-function createFilter(attribute, container, label) {
+function createFilter(apiSrc, column, container, label, id) {
     if (!container) return; // Si le conteneur n'existe pas, on ne crée pas de filtre
 
     const labelObject = document.createElement("label");
     labelObject.innerText = label;
     const select = document.createElement("select");
-    select.id = attribute;
+    select.id = id;
 
-    const options = getOptions(attribute);
-    for (let i = 0; i < options.length; i++) {
-        let optionObject = document.createElement("option");
-        optionObject.value = options[i];
-        optionObject.innerText = options[i];
-        select.appendChild(optionObject);
-    }
+    fetch(apiSrc, { method: "GET" })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Erreur HTTP: " + response.statusText);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.error) {
+                for (let i = 0; i < data.length; i++) {
+                    const optionObject = document.createElement("option");
+                    optionObject.value = data[i][column];
+                    optionObject.innerText = data[i][column];
+                    select.appendChild(optionObject);
+                }
+            } else {
+                throw new Error("Erreur reçue du serveur: " + data.error);
+            }
+        })
+        .catch((error) => {
+            console.error(error.message);
+        });
 
     container.insertBefore(select, container.firstChild);
     container.insertBefore(labelObject, select);
