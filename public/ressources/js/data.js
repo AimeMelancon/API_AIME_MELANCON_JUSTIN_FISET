@@ -155,15 +155,9 @@ function createPopularActivity(activity) {
 function populateFilters() {
     const form = document.getElementById("form-filtres");
 
-    createFilter("/api/levels/", "name", form, "Niveau : ", "levelFilters");
-    createFilter("/api/locations/", "name", form, "Lieu : ", "locationFilters");
-    createFilter(
-        "/api/coaches/",
-        "name",
-        form,
-        "Entraineur : ",
-        "coachFilters"
-    );
+    createFilter("/api/levels/", "name", form, "Niveau : ", "level");
+    createFilter("/api/locations/", "name", form, "Lieu : ", "location");
+    createFilter("/api/coaches/","name",form,"Entraineur : ","coach");
 }
 
 function createFilter(apiSrc, column, container, label, id) {
@@ -183,6 +177,7 @@ function createFilter(apiSrc, column, container, label, id) {
         })
         .then((data) => {
             if (!data.error) {
+                data.unshift({ [column]: "Tous" }); // Ajout manuel de l'option Tous pour chaque filtre
                 for (let i = 0; i < data.length; i++) {
                     const optionObject = document.createElement("option");
                     optionObject.value = data[i][column];
@@ -221,7 +216,6 @@ function bindFilterEvents() {
     if (appliquer) {
         appliquer.addEventListener("click", () => {
             displayFilteredActivities({
-                schedule_day: document.getElementById("schedule_day").value,
                 coach: document.getElementById("coach").value,
                 location: document.getElementById("location").value,
                 level: document.getElementById("level").value,
@@ -240,7 +234,6 @@ function bindFilterEvents() {
 // Réinitialise les filtres pour la page des activités
 function resetActivityFilters() {
     displayFilteredActivities({
-        schedule_day: "Tous",
         coach: "Tous",
         location: "Tous",
         level: "Tous",
@@ -250,21 +243,42 @@ function resetActivityFilters() {
 // affiche toutes les activités filtrées pour la page des activités
 function displayFilteredActivities(filters) {
     const container = document.getElementById("conteneur-activites");
-    if (!container) return; // Si le conteneur n'existe pas, on ne peut pas afficher les activités
+    if (!container) {
+        console.error("Conteneur d'activités non trouvé");
+        return;
+    }
 
     container.innerHTML = ""; // Reset du code html, on enlève les activités déjà affichées
 
-    activities.forEach((activity) => {
-        for (let attribute in filters) {
-            if (
-                filters[attribute] != "Tous" &&
-                activity[attribute] != filters[attribute]
-            ) {
-                return;
-            }
+    const apiurl = "/api/activities/filter?";
+    const paramsObj = new URLSearchParams();
+    for (const key in filters) {
+        if (filters[key] !== "Tous") {
+          paramsObj.append(key, filters[key]);
         }
-        createActivity(activity, container);
-    });
+    }
+    const params = paramsObj.toString();
+    const uri = params ? apiurl + params : apiurl;
+
+    fetch(uri, { method: "GET" })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Erreur HTTP: " + response.statusText);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.error) {
+                data.forEach((activity) => {
+                    createActivity(activity, container);
+                });
+            } else {
+                throw new Error("Erreur reçue du serveur: " + data.error);
+            }
+        })
+        .catch((error) => {
+            console.error(error.message);
+        });
 }
 
 // Crée un élément HTML pour une activité donnée
@@ -272,6 +286,7 @@ function createActivity(activity, container) {
     const article = document.createElement("article");
     article.className = "table";
 
+    console.log(activity);
     const col1 = document.createElement("div");
     col1.className = "col";
     const img = document.createElement("img");
@@ -296,19 +311,16 @@ function createActivity(activity, container) {
     const horaire = document.createElement("p");
     horaire.innerText = "Horaire : " + activity.schedule_day;
     const niveau = document.createElement("p");
-    niveau.innerText = "Niveau : " + activity.level;
+    niveau.innerText = "Niveau : " + activity.level_id;
     const coach = document.createElement("p");
-    coach.innerText = "Entraineur : " + activity.coach;
+    coach.innerText = "Entraineur : " + activity.coach_name;
     const location = document.createElement("div");
     location.className = "location";
     const locationTxt = document.createElement("p");
     location.innerText = "Lieu : " + activity.location;
     const locationImg = document.createElement("img");
-    locationImg.src =
-        activity.location === "Intérieur"
-            ? "ressources/images/icons/dark/home.png"
-            : "ressources/images/icons/dark/grass.png";
-    locationImg.alt = activity.location;
+    locationImg.src = activity.location_logo;
+    locationImg.alt = activity.location_name;
     locationImg.className = "location-img";
     location.append(locationTxt, locationImg);
     contenu.append(description, horaire, niveau, coach, location);

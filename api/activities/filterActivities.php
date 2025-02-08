@@ -8,7 +8,7 @@ $location = (isset($_GET["location"]) && isset($_GET["location"])) ? $_GET["loca
 
 $demande = 
     "
-    SELECT a.*, c.name as coach_name, loc.name as location_name
+    SELECT a.*, c.name as coach_name, loc.name as location_name, loc.logo as location_logo
     FROM activities a
     JOIN coaches c ON a.coach_id = c.id
     JOIN locations loc ON a.location_id = loc.id
