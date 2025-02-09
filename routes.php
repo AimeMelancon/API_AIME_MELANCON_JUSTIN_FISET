@@ -4,6 +4,7 @@
 // chaque clé est un regex et chaque valeur est le chemin du fichier php correspondant qui sera chargé
 $routes = [
     "GET" => [
+        "/" => "/public/index.php",
         "/index/?" => "/public/index.php",
         "/formulaireActivite/?" => "/public/formulaireActivite.php",
         "/listeActivite/?" => "/public/listeActivite.php",
