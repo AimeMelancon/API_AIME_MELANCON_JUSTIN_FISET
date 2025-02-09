@@ -30,7 +30,7 @@ if ($location) {
     $params["location"] = $location;
 }
 
-$req = $pdo->prepare($demande.";");
+$req = $pdo->prepare($demande);
 $req->execute($params);
 $rep = $req->fetchAll(PDO::FETCH_ASSOC);
 

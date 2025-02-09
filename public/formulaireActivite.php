@@ -50,22 +50,20 @@
                 <select id="niv" required>
                     <option value selected disabled>---Veuillez choisir un
                         niveau---</option>
-                    <option value="Débutant">Débutant</option>
-                    <option value="Intermédiaire">Intermédiaire</option>
-                    <option value="Avancé">Avancé</option>
-                    <option value="Tous niveaux">Tous niveaux</option>
                 </select> <br>
                 <label for="coach">Coach :</label> <br>
-                <input type="text" id="coach" required> <br>
-                <label for="horaire">Horaire :</label> <br>
-                <input type="text" id="horaire" required> <br>
-                <label for="lieu">Lieu :</label> <br>
+                <select id="coach" required>
+                    <option value selected disabled>---Veuillez sélectionner
+                        un coach---</option>
+                </select> <br>
+                <label for="schedule_day">Horaire :</label> <br>
+                <input type="text" id="schedule_day" required> <br>
+                <label for="schedule_time">Horaire :</label> <br>
+                <input type="text" id="schedule_time" required> <br>
+                <label for="location">Lieu :</label> <br>
                 <select id="location" required>
                     <option value selected disabled>---Veuillez sélectionner
                         un lieu pour l'activité---</option>
-                    <option value="Intérieur">Intérieur</option>
-                    <option value="Extérieur">Extérieur</option>
-                    <option value="Distance">Distance</option>
                 </select> <br>
                 <br>
                 <button id="enregistrer" class="buttons" type="button">Enregistrer</button>

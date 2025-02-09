@@ -1,92 +1,6 @@
-// données des activités
-const activities = [
-    {
-        id: 1,
-        name: "Yoga",
-        description:
-            "Retrouver votre équilibre intérieur avec nos séances de yoga apaisantes",
-        image: "ressources/images/activities/yoga.jpg",
-        level: "Débutant",
-        coach: "Amélie",
-        schedule_day: "Lundi",
-        schedule_time: "10h - 11h",
-        location: "Intérieur",
-    },
-    {
-        id: 2,
-        name: "Calisthenic",
-        description:
-            "Renforcez votre corps avec des exercices au poids du corps puissants et dynamiques.",
-        image: "ressources/images/activities/calisthenic.jpg",
-        level: "Tous niveaux",
-        coach: "Lucas",
-        schedule_day: "Mardi",
-        schedule_time: "18h - 19h",
-        location: "Extérieur",
-    },
-    {
-        id: 3,
-        name: "Natation",
-        description:
-            "Plongez dans la santé et la vitalité grâce à nos cours de natation adaptés à tous les niveaux.",
-        image: "ressources/images/activities/natation.jpg",
-        level: "Intermédiaire",
-        coach: "Nina",
-        schedule_day: "Mercredi",
-        schedule_time: "14h - 15h",
-        location: "Intérieur",
-    },
-    {
-        id: 4,
-        name: "Danse",
-        description:
-            "Perfectionner ou découvrez vos talent et améliorer votre mobilité avec nos cours amusant pours tous",
-        image: "ressources/images/activities/danse.jpg",
-        level: "Tous niveaux",
-        coach: "Paul",
-        schedule_day: "Jeudi",
-        schedule_time: "16h - 17h",
-        location: "Extérieur",
-    },
-    {
-        id: 5,
-        name: "Karaté",
-        description:
-            "Développez votre discipline et vos compétences en arts martiaux.",
-        image: "ressources/images/activities/karate.jpg",
-        level: "Tous niveaux",
-        coach: "Sensei Hiro",
-        schedule_day: "Mardi",
-        schedule_time: "18h - 19h30",
-        location: "Intérieur",
-    },
-    {
-        id: 6,
-        name: "Course à pied",
-        description:
-            "Améliorez votre endurance et découvrez le plaisir de courir en plein air.",
-        image: "ressources/images/activities/running.jpg",
-        level: "Tous niveaux",
-        coach: "Sensei Hiro",
-        schedule_day: "Dimanche",
-        schedule_time: "8h - 9h",
-        location: "Extérieur",
-    },
-];
-
 function init() {
-    let idSale = new URL(window.location.href);
-    let params = new URLSearchParams(idSale.search);
-
-    if (params.has("id")) {
-        let _id = params.get("id");
-
-        let index = getActivityIndex(_id);
-        if (0 <= index && index < activities.length) {
-            populateForm(activities[index]);
-        } else {
-            console.log("id non trouvée");
-        }
+    if (window.location.pathname.includes("formulaireActivite")) {
+        initForm();
     }
 
     initButtons();
@@ -101,6 +15,54 @@ function init() {
 addEventListener("DOMContentLoaded", () => {
     init();
 });
+
+async function initForm() {
+    await populateFormOptions(); // On commence pas créer les options à l'aide de l'API, on attend avant de rempolir le formulaire!
+
+    // Au besoin, on remplit le formulaire avec les données de l'activité
+    let idSale = new URL(window.location.href);
+    let params = new URLSearchParams(idSale.search);
+    if (params.has("id")) {
+        populateForm(params.get("id"));
+    }
+}
+
+async function populateFormOptions() {
+    const coach = document.getElementById("coach");
+    const location = document.getElementById("location");
+    const level = document.getElementById("niv");
+
+    await Promise.all([
+        createOptionFromAPI("/api/coaches/", "name", coach),
+        createOptionFromAPI("/api/locations/", "name", location),
+        createOptionFromAPI("/api/levels/", "name", level),
+    ]);
+}
+
+async function createOptionFromAPI(apiSrc, column, select) {
+    await fetch(apiSrc, { method: "GET" })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Erreur HTTP: " + response.statusText);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.error) {
+                data.forEach((optionData) => {
+                    const option = document.createElement("option");
+                    option.value = optionData[column];
+                    option.innerText = optionData[column];
+                    select.append(option);
+                });
+            } else {
+                throw new Error("Erreur reçue du serveur: " + data.error);
+            }
+        })
+        .catch((error) => {
+            console.error(error.message);
+        });
+}
 
 // affiche les activités populaires pour la page d'accueil
 function displayPopularActivities() {
@@ -157,7 +119,7 @@ function populateFilters() {
 
     createFilter("/api/levels/", "name", form, "Niveau : ", "level");
     createFilter("/api/locations/", "name", form, "Lieu : ", "location");
-    createFilter("/api/coaches/","name",form,"Entraineur : ","coach");
+    createFilter("/api/coaches/", "name", form, "Entraineur : ", "coach");
 }
 
 function createFilter(apiSrc, column, container, label, id) {
@@ -244,7 +206,7 @@ function resetActivityFilters() {
 function displayFilteredActivities(filters) {
     const container = document.getElementById("conteneur-activites");
     if (!container) {
-        console.error("Conteneur d'activités non trouvé");
+        console.log("Conteneur d'activités non trouvé");
         return;
     }
 
@@ -254,7 +216,7 @@ function displayFilteredActivities(filters) {
     const paramsObj = new URLSearchParams();
     for (const key in filters) {
         if (filters[key] !== "Tous") {
-          paramsObj.append(key, filters[key]);
+            paramsObj.append(key, filters[key]);
         }
     }
     const params = paramsObj.toString();
@@ -317,7 +279,7 @@ function createActivity(activity, container) {
     const location = document.createElement("div");
     location.className = "location";
     const locationTxt = document.createElement("p");
-    location.innerText = "Lieu : " + activity.location;
+    location.innerText = "Lieu : " + activity.location_name;
     const locationImg = document.createElement("img");
     locationImg.src = activity.location_logo;
     locationImg.alt = activity.location_name;
@@ -399,26 +361,39 @@ function initButtons() {
 }
 
 // Remplir le formulaire avec les données de l'activité
-function populateForm(activity) {
-    document.getElementById("nom-activite").value = activity.name;
-    document.getElementById("description").value = activity.description;
-    document.getElementById("img-url").value = activity.image;
-    document.getElementById("coach").value = activity.coach;
-    document.getElementById("horaire").value =
-        activity.schedule_day + " " + activity.schedule_time;
-    document.getElementById("niv").value = activity.level;
-    document.getElementById("location").value = activity.location;
-    document.getElementById("form-title").innerText =
-        "Modifier l'activité : " + activity.name;
-}
+function populateForm(id) {
+    if (!Number.isInteger(Number(id))) return; // Si l'id n'est pas un nombre, on fait rien
 
-// Retourne l'index d'une activité dans l'ensemble de données selon son id
-function getActivityIndex(id) {
-    for (let i = 0; i < activities.length; i++) {
-        if (activities[i].id == id) {
-            return i;
-        }
-    }
-
-    return -1;
+    fetch("/api/activities/" + id, { method: "GET" })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Erreur HTTP: " + response.statusText);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.error) {
+                const activity = data[0];
+                console.log(activity);
+                document.getElementById("nom-activite").value = activity.name;
+                document.getElementById("description").value =
+                    activity.description;
+                document.getElementById("img-url").value = activity.image;
+                document.getElementById("coach").value = activity.coach_name;
+                document.getElementById("schedule_day").value =
+                    activity.schedule_day;
+                document.getElementById("schedule_time").value =
+                    activity.schedule_time;
+                document.getElementById("niv").value = activity.level_id;
+                document.getElementById("location").value =
+                    activity.location_name;
+                document.getElementById("form-title").innerText =
+                    "Modifier l'activité : " + activity.name;
+            } else {
+                throw new Error("Erreur reçue du serveur: " + data.error);
+            }
+        })
+        .catch((error) => {
+            console.error(error.message);
+        });
 }
