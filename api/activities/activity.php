@@ -95,7 +95,7 @@ class Activity
         try {
             $data = json_decode(file_get_contents("php://input"), true);
 
-            if ($data) {
+            if ($data && isset($data["name"], $data["description"], $data["image"], $data["level_id"], $data["coach_id"], $data["schedule_day"], $data["schedule_time"], $data["location_id"])) {
                 $req = $pdo->prepare("INSERT INTO activities (name, description, image, level_id, coach_id, schedule_day, schedule_time, location_id) 
                                      VALUES (:name, :description, :image, :level_id, :coach_id, :schedule_day, :schedule_time, :location_id)");
 
@@ -109,8 +109,8 @@ class Activity
                     "schedule_time" => $data["schedule_time"],
                     "location_id" => $data["location_id"]
                 ]);
-                
-                if($success) {
+
+                if ($success) {
                     http_response_code(200);
                     echo json_encode([
                         "msg" => "Nouvelle activité bien crée!"
