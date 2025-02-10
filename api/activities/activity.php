@@ -7,8 +7,8 @@ class Activity
     {
         global $pdo;
 
-        header('Access-Control-Allow-Origin: *');  
-        header('Content-Type: application/json; charset=utf-8');  
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (filter_var($id, FILTER_VALIDATE_INT)) {
             $req = $pdo->prepare("
@@ -37,10 +37,10 @@ class Activity
     static function updateActivity($id)
     {
         global $pdo;
-        
-        header('Access-Control-Allow-Origin: *');  
-        header('Content-Type: application/json; charset=utf-8');  
-        
+
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=utf-8');
+
         $data = json_decode(file_get_contents("php://input"), true);
 
         if ($data) {
@@ -68,7 +68,7 @@ class Activity
                 } else {
                     http_response_code(409);
                     echo json_encode([
-                        "error_msg" => "Une activité avec les mêmes spécifications existe déjà."
+                        "error_msg" => "Erreur dans la modification de l'activité."
                     ]);
                 }
             } catch (Exception $e) {
@@ -89,36 +89,48 @@ class Activity
     {
         global $pdo;
 
-        header('Access-Control-Allow-Origin: *');  
-        header('Content-Type: application/json; charset=utf-8');  
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=utf-8');
 
-        $data = json_decode(file_get_contents("php://input"), true);
+        try {
+            $data = json_decode(file_get_contents("php://input"), true);
 
-        if ($data) {
-            $req = $pdo->prepare("INSERT INTO activities (name, description, level_id, coach_id, location_id) 
-                                 VALUES (:name, :description, :level_id, :coach_id, :location_id)");
+            if ($data) {
+                $req = $pdo->prepare("INSERT INTO activities (name, description, image, level_id, coach_id, schedule_day, schedule_time, location_id) 
+                                     VALUES (:name, :description, :image, :level_id, :coach_id, :schedule_day, :schedule_time, :location_id)");
 
-            $req->execute([
-                "name" => $data["name"],
-                "description" => $data["description"],
-                "level_id" => $data["level_id"],
-                "coach_id" => $data["coach_id"],
-                "location_id" => $data["location_id"]
-            ]);
-
-            $rep = $req->fetchAll(PDO::FETCH_ASSOC);
-            if ($rep) {
-                echo json_encode($rep, JSON_PRETTY_PRINT);
+                $success = $req->execute([
+                    "name" => $data["name"],
+                    "description" => $data["description"],
+                    "image" => $data["image"],
+                    "level_id" => $data["level_id"],
+                    "coach_id" => $data["coach_id"],
+                    "schedule_day" => $data["schedule_day"],
+                    "schedule_time" => $data["schedule_time"],
+                    "location_id" => $data["location_id"]
+                ]);
+                
+                if($success) {
+                    http_response_code(200);
+                    echo json_encode([
+                        "msg" => "Nouvelle activité bien crée!"
+                    ]);
+                } else {
+                    http_response_code(409);
+                    echo json_encode([
+                        "error_msg" => "Echec de l'ajout d'une nouvelle activité."
+                    ]);
+                }
             } else {
-                http_response_code(409);
+                http_response_code(400);
                 echo json_encode([
-                    "error_msg" => "Une activité avec les mêmes spécifications existe déjà."
+                    "error_msg" => "Vous devez fournir une activité dans un format json valide."
                 ]);
             }
-        } else {
+        } catch (Exception $e) {
             http_response_code(400);
             echo json_encode([
-                "error_msg" => "JSON Invalide."
+                "error_msg" => $e->getMessage()
             ]);
         }
     }
