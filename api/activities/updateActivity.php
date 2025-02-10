@@ -23,6 +23,7 @@ if ($data) {
         ]);
 
         $rep = $req->fetchAll(PDO::FETCH_ASSOC);
+        
         if($rep){
             echo json_encode($rep, JSON_PRETTY_PRINT);
         }else{

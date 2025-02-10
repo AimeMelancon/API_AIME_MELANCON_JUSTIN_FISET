@@ -66,7 +66,7 @@
                         un lieu pour l'activité---</option>
                 </select> <br>
                 <br>
-                <button id="enregistrer" class="buttons" id="saveUpdateBtn"type="button">Enregistrer</button>
+                <button id="enregistrer" class="buttons" type="button">Enregistrer</button>
             </form>
         </section>
     </main>
