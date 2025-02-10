@@ -48,7 +48,6 @@ async function createOptionFromAPI(apiSrc, textColumn, valueColumn, select) {
             return response.json();
         })
         .then((data) => {
-            console.log(data); // TODO: remove
             if (!data.error) {
                 data.forEach((optionData) => {
                     const option = document.createElement("option");
@@ -375,7 +374,6 @@ function populateForm(id) {
         .then((data) => {
             if (!data.error) {
                 const activity = data[0];
-                console.log(activity);
                 document.getElementById("nom-activite").value = activity.name;
                 document.getElementById("description").value =
                     activity.description;
