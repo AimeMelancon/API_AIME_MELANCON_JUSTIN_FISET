@@ -56,9 +56,9 @@
                     <option value selected disabled>---Veuillez sélectionner
                         un coach---</option>
                 </select> <br>
-                <label for="schedule_day">Horaire :</label> <br>
+                <label for="schedule_day">Horaire(jours) :</label> <br>
                 <input type="text" id="schedule_day" required> <br>
-                <label for="schedule_time">Horaire :</label> <br>
+                <label for="schedule_time">Horaire(temps) :</label> <br>
                 <input type="text" id="schedule_time" required> <br>
                 <label for="location">Lieu :</label> <br>
                 <select id="location" required>
@@ -66,7 +66,7 @@
                         un lieu pour l'activité---</option>
                 </select> <br>
                 <br>
-                <button id="enregistrer" class="buttons" type="button">Enregistrer</button>
+                <button id="enregistrer" class="buttons" id="saveUpdateBtn"type="button">Enregistrer</button>
             </form>
         </section>
     </main>

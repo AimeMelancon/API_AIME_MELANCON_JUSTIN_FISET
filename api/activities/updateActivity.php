@@ -7,7 +7,7 @@ if ($data) {
     try {
         $req = $pdo->prepare(
             "UPDATE activities 
-            SET   name = :name, description = :description, level_id = :level_id, coach_id = :coach_id, location_id = :location_id
+            SET   name = :name, description = :description, level_id = :level_id, coach_id = :coach_id, schedule_day = :schedule_day , schedule_time =:schedule_time, location_id = :location_id
             WHERE activities.id = :id"
         );
 
@@ -16,6 +16,8 @@ if ($data) {
             "description" => $data["description"],
             "level_id" => $data["level_id"],
             "coach_id" => $data["coach_id"],
+            "schedule_day"=> $data["schedule_day"],
+            "schedule_time"=> $data["schedule_time"],
             "location_id" => $data["location_id"],
             "id" => $data["id"],
         ]);

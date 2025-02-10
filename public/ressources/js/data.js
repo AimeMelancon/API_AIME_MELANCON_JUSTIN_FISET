@@ -17,7 +17,7 @@ addEventListener("DOMContentLoaded", () => {
 });
 
 async function initForm() {
-    await populateFormOptions(); // On commence pas créer les options à l'aide de l'API, on attend avant de rempolir le formulaire!
+    await populateFormOptions(); // On commence pas créer les options à l'aide de l'API, on attend avant de remplir le formulaire!
 
     // Au besoin, on remplit le formulaire avec les données de l'activité
     let idSale = new URL(window.location.href);
@@ -396,4 +396,49 @@ function populateForm(id) {
         .catch((error) => {
             console.error(error.message);
         });
+}
+
+
+function updateActivity(id){
+    if(!Number.isInteger(Number(id))) return;
+
+    const url = "/api/activities/"+id;
+
+    //Prépare les  données à envoyer à l'api
+    const data={
+        
+        id:            id,
+        name:          activity.name,
+        description:   activity.description,
+        level_id:      activity.level_id,
+        coach_id:      activity.coach_id,
+        schedule_day:  activity.schedule_day,
+        schedule_time: activity.schedule_time,
+        location_id:   activity.location_id,
+
+    };
+    //Prépare le fichier JSON et la  méthode pour l'envoie
+    const fetchOptions = {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    };
+    //Envoie la requête à l'api.
+    fetch(url,fetchOptions)
+    .then(response => {
+        if (!response.ok) {
+          throw new Error('Le serveur a renvoyé une erreur');
+        }
+        return response.json(); 
+      })
+      .then(updatedPost => {
+        console.log('Post mis à jour:', updatedPost);
+      })
+      .catch(error => {
+        console.error("Il y a eu une erreur lors de l'exécution du fetch");
+      });
+
+
 }
