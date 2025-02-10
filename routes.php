@@ -1,34 +1,26 @@
 <?php 
 
-// Spécification de chacunes des routes pour les différents fichiers php en fonction de la méthode HTTP (GET, POST, PUT, DELETE)
-// chaque clé est un regex et chaque valeur est le chemin du fichier php correspondant qui sera chargé
-$routes = [
-    "GET" => [
-        "/" => "/public/index.php",
-        "/index/?" => "/public/index.php",
-        "/formulaireActivite/?" => "/public/formulaireActivite.php",
-        "/listeActivite/?" => "/public/listeActivite.php",
-        "/api/activities/random/?" => "/api/activities/randomActivities.php",
-        "/api/activities/filter/?" => "/api/activities/filterActivities.php",
-        "/api/activities/([0-9]+/?)" => "/api/activities/activity.php",
-        "/api/coaches/?" => "/api/coaches/coaches.php",
-        "/api/locations/?" => "/api/locations/locations.php",
-        "/api/levels/?" => "/api/levels/levels.php",
-        "/404" => "/404.php",
-    ],
-    "POST" => [
-        "/api/activities/?" => "/api/activities/addActivity.php",
-        "/404" => "/404.php",
-    ],
-    "PUT" => [
-        "/api/activities/([0-9]+)" => "/api/activities/updateActivity.php",
-        "/404" => "/404.php",
-    ],
-];
+require_once(__DIR__ . "/router.php");
+require __DIR__ . "/api/activities/activity.php";
 
-function get_routes($method) {
-    global $routes;
-    return $routes[$method] ?? [];
-}
+get("/api/activities/random", "/api/activities/randomActivities.php");
+get("/api/activities/filter", "/api/activities/filterActivities.php");
 
+post("/api/activities", function() {
+    Activity::addActivity();
+});
+
+put("/api/activities", function($id) {
+    Activity::updateActivity($id);
+});
+
+get('/api/activities/$id', function($id) {
+    Activity::getActivity($id);
+});
+
+get("/api/coaches", "/api/coaches/coaches.php");
+get("/api/locations", "/api/locations/locations.php");
+get("/api/levels", "/api/levels/levels.php");
+
+any("/404", "/404.php");
 ?>
