@@ -1,6 +1,9 @@
 <?php
 require __DIR__ . "/../database.php";
 
+header('Access-Control-Allow-Origin: *');  
+header('Content-Type: application/json; charset=utf-8');  
+
 $req = $pdo->prepare("SELECT * FROM locations");
 $req->execute();
 

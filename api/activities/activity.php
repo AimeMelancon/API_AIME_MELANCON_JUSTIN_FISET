@@ -7,6 +7,9 @@ class Activity
     {
         global $pdo;
 
+        header('Access-Control-Allow-Origin: *');  
+        header('Content-Type: application/json; charset=utf-8');  
+
         if (filter_var($id, FILTER_VALIDATE_INT)) {
             $req = $pdo->prepare("
                 SELECT a.*, c.name as coach_name, loc.name as location_name, loc.logo as location_logo, loc.id as location_id
@@ -34,6 +37,9 @@ class Activity
     static function updateActivity($id)
     {
         global $pdo;
+        
+        header('Access-Control-Allow-Origin: *');  
+        header('Content-Type: application/json; charset=utf-8');  
         
         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -82,6 +88,9 @@ class Activity
     static function addActivity()
     {
         global $pdo;
+
+        header('Access-Control-Allow-Origin: *');  
+        header('Content-Type: application/json; charset=utf-8');  
 
         $data = json_decode(file_get_contents("php://input"), true);
 

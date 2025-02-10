@@ -2,6 +2,9 @@
 
 require __DIR__ . "/../database.php";
 
+header('Access-Control-Allow-Origin: *');  
+header('Content-Type: application/json; charset=utf-8');  
+
 $coach = (isset($_GET["coach"]) && strlen($_GET["coach"])) ? $_GET["coach"] : null;
 $level = (isset($_GET["level"]) && isset($_GET["level"])) ? $_GET["level"] : null;
 $location = (isset($_GET["location"]) && isset($_GET["location"])) ? $_GET["location"] : null;
