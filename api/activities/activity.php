@@ -7,8 +7,8 @@ class Activity
     {
         global $pdo;
 
-        header('Access-Control-Allow-Origin: *');  
-        header('Content-Type: application/json; charset=utf-8');  
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=utf-8');
 
         if (filter_var($id, FILTER_VALIDATE_INT)) {
             $req = $pdo->prepare("
@@ -34,42 +34,55 @@ class Activity
         }
     }
 
-    static function updateActivity($id)
+    static function updateActivity()
     {
         global $pdo;
-        
-        header('Access-Control-Allow-Origin: *');  
-        header('Content-Type: application/json; charset=utf-8');  
-        
+
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=utf-8');
+
         $data = json_decode(file_get_contents("php://input"), true);
 
         if ($data) {
             try {
-                $req = $pdo->prepare(
-                    "UPDATE activities 
-            SET   name = :name, description = :description, level_id = :level_id, coach_id = :coach_id, schedule_day = :schedule_day , schedule_time =:schedule_time, location_id = :location_id
-            WHERE activities.id = :id"
-                );
 
-                $req->execute([
-                    "name" => $data["name"],
-                    "description" => $data["description"],
-                    "level_id" => $data["level_id"],
-                    "coach_id" => $data["coach_id"],
-                    "schedule_day" => $data["schedule_day"],
-                    "schedule_time" => $data["schedule_time"],
-                    "location_id" => $data["location_id"],
-                    "id" => $data["id"],
+                //On vérifie si la table de l'id sélectionné existe dans la database
+                $unitTest = $pdo->prepare("SELECT id = :id
+                FROM activities");
+
+                $unitTest->execute([
+                    "id" => $data["id"]
                 ]);
+                $repTest = $unitTest->fetchAll(PDO::FETCH_ASSOC);
+                if (count($repTest) >= $data["id"]) {
 
-                $rep = $req->fetchAll(PDO::FETCH_ASSOC);
-                if ($rep) {
-                    echo json_encode($rep, JSON_PRETTY_PRINT);
-                } else {
-                    http_response_code(409);
-                    echo json_encode([
-                        "error_msg" => "Une activité avec les mêmes spécifications existe déjà."
+                    //On insère dans l'activité sélectionné les nouvelles données voulues
+                    $req = $pdo->prepare(
+                        "UPDATE activities 
+            SET   name = :name, description = :description,image = :image, level_id = :level_id, coach_id = :coach_id,
+             schedule_day = :schedule_day , schedule_time =:schedule_time, location_id = :location_id
+            WHERE activities.id = :id"
+                    );
+
+                    $req->execute([
+                        "name" => $data["name"],
+                        "description" => $data["description"],
+                        "image" => $data["image"],
+                        "level_id" => $data["level_id"],
+                        "coach_id" => $data["coach_id"],
+                        "schedule_day" => $data["schedule_day"],
+                        "schedule_time" => $data["schedule_time"],
+                        "location_id" => $data["location_id"],
+                        "id" => $data["id"],
                     ]);
+
+                    $rep = $req->fetchAll(PDO::FETCH_ASSOC);
+
+                    echo json_encode($rep, JSON_PRETTY_PRINT);
+
+                } else {
+                    http_response_code(404);
+                    echo json_encode(["error_msg" => "L'id de l'activité saisie n'existe pas dans la base de donnée."]);
                 }
             } catch (Exception $e) {
                 http_response_code(400);
@@ -89,8 +102,8 @@ class Activity
     {
         global $pdo;
 
-        header('Access-Control-Allow-Origin: *');  
-        header('Content-Type: application/json; charset=utf-8');  
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=utf-8');
 
         $data = json_decode(file_get_contents("php://input"), true);
 
@@ -123,3 +136,4 @@ class Activity
         }
     }
 }
+?>
