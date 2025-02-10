@@ -10,7 +10,7 @@ post("/api/activities", function() {
     Activity::addActivity();
 });
 
-put("/api/activities", function($id) {
+put('/api/activities/$id', function($id) {
     Activity::updateActivity($id);
 });
 
