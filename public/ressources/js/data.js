@@ -33,13 +33,13 @@ async function populateFormOptions() {
     const level = document.getElementById("niv");
 
     await Promise.all([
-        createOptionFromAPI("/api/coaches/", "name", coach),
-        createOptionFromAPI("/api/locations/", "name", location),
-        createOptionFromAPI("/api/levels/", "name", level),
+        createOptionFromAPI("/api/coaches/", "name", "id", coach),
+        createOptionFromAPI("/api/locations/", "name", "id", location),
+        createOptionFromAPI("/api/levels/", "name", "name", level),
     ]);
 }
 
-async function createOptionFromAPI(apiSrc, column, select) {
+async function createOptionFromAPI(apiSrc, textColumn, valueColumn, select) {
     await fetch(apiSrc, { method: "GET" })
         .then((response) => {
             if (!response.ok) {
@@ -48,11 +48,12 @@ async function createOptionFromAPI(apiSrc, column, select) {
             return response.json();
         })
         .then((data) => {
+            console.log(data); // TODO: remove
             if (!data.error) {
                 data.forEach((optionData) => {
                     const option = document.createElement("option");
-                    option.value = optionData[column];
-                    option.innerText = optionData[column];
+                    option.value = optionData[valueColumn];
+                    option.innerText = optionData[textColumn];
                     select.append(option);
                 });
             } else {
@@ -379,14 +380,14 @@ function populateForm(id) {
                 document.getElementById("description").value =
                     activity.description;
                 document.getElementById("img-url").value = activity.image;
-                document.getElementById("coach").value = activity.coach_name;
+                document.getElementById("coach").value = activity.coach_id;
                 document.getElementById("schedule_day").value =
                     activity.schedule_day;
                 document.getElementById("schedule_time").value =
                     activity.schedule_time;
                 document.getElementById("niv").value = activity.level_id;
                 document.getElementById("location").value =
-                    activity.location_name;
+                    activity.location_id;
                 document.getElementById("form-title").innerText =
                     "Modifier l'activité : " + activity.name;
             } else {
