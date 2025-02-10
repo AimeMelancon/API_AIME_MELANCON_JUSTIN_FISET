@@ -43,7 +43,7 @@ class Activity
 
         $data = json_decode(file_get_contents("php://input"), true);
 
-        if ($data) {
+        if ($data && isset($data["name"], $data["description"], $data["image"], $data["level_id"], $data["coach_id"], $data["schedule_day"], $data["schedule_time"], $data["location_id"], $data["id"])) {
             try {
 
                 //On vérifie si la table de l'id sélectionné existe dans la database
@@ -79,7 +79,6 @@ class Activity
                     $rep = $req->fetchAll(PDO::FETCH_ASSOC);
 
                     echo json_encode($rep, JSON_PRETTY_PRINT);
-
                 } else {
                     http_response_code(404);
                     echo json_encode(["error_msg" => "L'id de l'activité saisie n'existe pas dans la base de donnée."]);
@@ -93,7 +92,7 @@ class Activity
         } else {
             http_response_code(400);
             echo json_encode([
-                "error_msg" => "JSON invalide"
+                "error_msg" => "JSON invalide, vous devez fournir une activité valide au format JSON."
             ]);
         }
     }
@@ -148,4 +147,3 @@ class Activity
         }
     }
 }
-?>
