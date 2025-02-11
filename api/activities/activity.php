@@ -43,7 +43,7 @@ class Activity
 
         $data = json_decode(file_get_contents("php://input"), true);
 
-        if ($data && isset($data["name"], $data["description"], $data["image"], $data["level_id"], $data["coach_id"], $data["schedule_day"], $data["schedule_time"], $data["location_id"], $data["id"])) {
+        if ($data && isset($data["name"], $data["description"], $data["image"], $data["level_id"], $data["coach_id"], $data["schedule_day"], $data["schedule_time"], $data["location_id"])) {
             try {
                 if (filter_var($id, FILTER_VALIDATE_INT)) {
                     //On insère dans l'activité sélectionné les nouvelles données voulues
