@@ -21,15 +21,15 @@ $demande =
 // CONSTRUSTION DE LA REQUETE SQL ET DES PARAMS À ENVOYER -----------------------------------
 $params = [];
 if($coach) {
-    $demande .= " AND c.name = :coach ";
+    $demande .= "AND c.name = :coach ";
     $params["coach"] = htmlspecialchars($coach);
 }
 if ($level) {
-    $demande .= " AND level_id = :level";
+    $demande .= "AND level_id = :level";
     $params["level"] = htmlspecialchars($level);
 }
 if ($location) {
-    $demande .= " AND loc.name = :location";
+    $demande .= "AND loc.name = :location";
     $params["location"] = htmlspecialchars($location);
 }
 
