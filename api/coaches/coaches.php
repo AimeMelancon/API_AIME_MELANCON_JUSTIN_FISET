@@ -13,7 +13,7 @@ if($rep) {
 } else {
     http_response_code(204);
     echo json_encode([
-        "error_msg" => "Aucun coach n'a été trouvé."
+        "status" => "Aucun coach n'a été trouvé."
     ]);
 }
 

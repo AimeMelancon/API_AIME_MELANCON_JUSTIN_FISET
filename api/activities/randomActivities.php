@@ -12,7 +12,7 @@ if($rep) {
     echo json_encode($rep, JSON_PRETTY_PRINT);
 } else {
     echo json_encode([
-        "error_msg" => "Impossible de récuperer les activitées."
+        "status" => "Impossible de récuperer les activitées."
     ]);
 }
 

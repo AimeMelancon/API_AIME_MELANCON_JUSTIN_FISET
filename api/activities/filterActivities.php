@@ -22,15 +22,15 @@ $demande =
 $params = [];
 if($coach) {
     $demande .= " AND c.name = :coach ";
-    $params["coach"] = $coach;
+    $params["coach"] = htmlspecialchars($coach);
 }
 if ($level) {
     $demande .= " AND level_id = :level";
-    $params["level"] = $level;
+    $params["level"] = htmlspecialchars($level);
 }
 if ($location) {
     $demande .= " AND loc.name = :location";
-    $params["location"] = $location;
+    $params["location"] = htmlspecialchars($location);
 }
 
 $req = $pdo->prepare($demande);
@@ -42,7 +42,7 @@ if($rep) {
 } else {
     http_response_code(204);
     echo json_encode([
-        "error_msg" => "Aucune activité ne correspond à ces filtres."
+        "status" => "Aucune activité ne correspond à ces filtres."
     ]);
 }
 
