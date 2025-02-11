@@ -146,4 +146,43 @@ class Activity
             ]);
         }
     }
+
+
+    static function isIdActivityValid($id){
+
+        global $pdo;
+
+        header('Access-Control-Allow-Origin: *');
+        header('Content-Type: application/json; charset=utf-8');
+
+        try{
+            $req= $pdo->prepare('SELECT id
+            FROM activities
+            WHERE id = :id');
+
+            $req->execute([
+                'id'=> $id
+             ]);
+
+             $rep =$req->fetch(PDO::FETCH_ASSOC);
+
+             if($rep){
+                http_response_code(200);
+                    echo json_encode([
+                        "status" => "Cette id existe bel et bien dans la base de donnée !"
+                    ]);
+             }else{
+                http_response_code(404);
+                echo json_encode(["status"=>"L'id saisit est introuvable."]);
+             }
+
+
+        }catch(Exception $e){
+            http_response_code(404);
+            echo json_encode(["status"=> $e->getMessage()]);
+        }
+
+    }
 }
+
+?>

@@ -18,9 +18,14 @@ get('/api/activities/$id', function($id) {
     Activity::getActivity($id);
 });
 
+get('/api/activities/isIdValid/$id', function($id){
+    Activity::isIdActivityValid($id);
+});
+
 get("/api/coaches", "/api/coaches/coaches.php");
 get("/api/locations", "/api/locations/locations.php");
 get("/api/levels", "/api/levels/levels.php");
+
 
 any("/404", "/404.php");
 ?>
