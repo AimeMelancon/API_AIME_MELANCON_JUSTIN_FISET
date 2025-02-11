@@ -71,7 +71,7 @@ class Activity
                     echo json_encode(["status" => "Activité modifié avec succès!"], JSON_PRETTY_PRINT);
                 } else {
                     http_response_code(404);
-                    echo json_encode(["status" => "L'id de l'activité saisie n'existe pas dans la base de donnée."]);
+                    echo json_encode(["status" => "L'id de l'activité n'est pas un id valide."]);
                 }
             } catch (Exception $e) {
                 http_response_code(400);
