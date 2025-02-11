@@ -34,7 +34,7 @@ class Activity
         }
     }
 
-    static function updateActivity()
+    static function updateActivity($id)
     {
         global $pdo;
 
@@ -45,7 +45,7 @@ class Activity
 
         if ($data && isset($data["name"], $data["description"], $data["image"], $data["level_id"], $data["coach_id"], $data["schedule_day"], $data["schedule_time"], $data["location_id"], $data["id"])) {
             try {
-                if (filter_var($data["id"], FILTER_VALIDATE_INT)) {
+                if (filter_var($id, FILTER_VALIDATE_INT)) {
                     //On insère dans l'activité sélectionné les nouvelles données voulues
                     $req = $pdo->prepare(
                         "
@@ -65,10 +65,20 @@ class Activity
                         "schedule_day" => htmlspecialchars($data["schedule_day"]),
                         "schedule_time" => htmlspecialchars($data["schedule_time"]),
                         "location_id" => htmlspecialchars($data["location_id"]),
-                        "id" => htmlspecialchars($data["id"]),
+                        "id" => htmlspecialchars($id),
                     ]);
 
-                    echo json_encode(["status" => "Activité modifié avec succès!"], JSON_PRETTY_PRINT);
+                    if ($req->rowCount() > 0) {
+                        http_response_code(200);
+                        echo json_encode([
+                            "status" => "Activité modifié avec succès!"
+                        ]);
+                    } else {
+                        http_response_code(404);
+                        echo json_encode([
+                            "status" => "Echec de la modification d'une activité. Activité introuvable ou champs inchangés."
+                        ]);
+                    }
                 } else {
                     http_response_code(404);
                     echo json_encode(["status" => "L'id de l'activité n'est pas un id valide."]);
