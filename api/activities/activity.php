@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . "/../database.php";
+require __DIR__ . "/../../utils.php";
 
 class Activity
 {
@@ -43,7 +44,7 @@ class Activity
 
         $data = json_decode(file_get_contents("php://input"), true);
 
-        if ($data && isset($data["name"], $data["description"], $data["image"], $data["level_id"], $data["coach_id"], $data["schedule_day"], $data["schedule_time"], $data["location_id"])) {
+        if ($data && isValid($data["name"], $data["description"], $data["image"], $data["level_id"], $data["coach_id"], $data["schedule_day"], $data["schedule_time"], $data["location_id"])) {
             try {
                 if (filter_var($id, FILTER_VALIDATE_INT)) {
                     //On insère dans l'activité sélectionné les nouvelles données voulues
@@ -107,7 +108,7 @@ class Activity
         try {
             $data = json_decode(file_get_contents("php://input"), true);
 
-            if ($data && isset($data["name"], $data["description"], $data["image"], $data["level_id"], $data["coach_id"], $data["schedule_day"], $data["schedule_time"], $data["location_id"])) {
+            if ($data && isValid($data["name"], $data["description"], $data["image"], $data["level_id"], $data["coach_id"], $data["schedule_day"], $data["schedule_time"], $data["location_id"])) {
                 $req = $pdo->prepare("INSERT INTO activities (name, description, image, level_id, coach_id, schedule_day, schedule_time, location_id) 
                                      VALUES (:name, :description, :image, :level_id, :coach_id, :schedule_day, :schedule_time, :location_id)");
 
